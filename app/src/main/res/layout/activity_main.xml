@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text="CERRAR SESIÓN"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@drawable/bg_rojo_redondeado"
+        android:elevation="4dp"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/pastillas"
+        android:scaleType="centerCrop"
+        android:alpha="0.8" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp">
+
+            <FrameLayout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bg_circulo_blanco_solido"
+                android:elevation="10dp"
+                android:layout_marginEnd="20dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_agenda"
+                    app:tint="@color/electric_medical_mint"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PillMinder"
+                android:textSize="42sp"
+                android:textStyle="bold"
+                android:textColor="@color/tech_white"
+                android:letterSpacing="0.02"
+                android:shadowColor="#B3000000"
+                android:shadowDx="0"
+                android:shadowDy="5"
+                android:shadowRadius="10"
+                android:gravity="start"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvEstadoVacio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="24dp"
+                android:backgroundTint="@color/pure_white_surface"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="32dp">
+
+                    <ImageView
+                        android:id="@+id/iv_lock"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:src="@drawable/candado"
+                        app:tint="@color/electric_technical_cyan"
+                        android:layout_marginBottom="32dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_status_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Farmacia vacía"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_status_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Presiona abajo para agregar tu primera medicina."
+                        android:textSize="17sp"
+                        android:textColor="@color/black_text"
+                        android:gravity="center"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMedicinas"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAgregarMedicina"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="AGREGAR MEDICINA"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#121212"
+            android:background="@drawable/bg_gradiente_moderno"
+            android:elevation="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Desarrollado por Gabriel Piña"
+            android:textAlignment="center"
+            android:textColor="#66FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="italic"
+            android:letterSpacing="0.05"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+</FrameLayout>

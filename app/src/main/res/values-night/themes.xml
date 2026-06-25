@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.RecordatorioDeMedicina" parent="Theme.Material3.Dark.NoActionBar">
+
+        <item name="android:windowBackground">@drawable/pattern_background</item>
+
+        <item name="colorPrimary">@color/electric_medical_mint</item>
+
+        <item name="android:statusBarColor">@color/technical_yellow</item>
+        <item name="android:windowLightStatusBar">false</item> </style>
+
+    <style name="Theme.RecordatorioDeMedicina" parent="Base.Theme.RecordatorioDeMedicina" />
+</resources>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/pastillas"
+        android:scaleType="centerCrop"
+        android:alpha="0.2" />
+
+    <ImageView
+        android:id="@+id/btnVolver"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="#FFFFFF"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="10dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Registrar Medicina"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@color/tech_white"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="56dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/pure_white_surface"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="8dp"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre de la pastilla"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Ej. Paracetamol"
+                        android:textColor="#000000"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dosis a tomar"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etCantidad"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Ej. 1"
+                        android:inputType="number"
+                        android:textColor="#000000"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¿Cuántas pastillas trae la caja?"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etInventario"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Ej. 20"
+                        android:inputType="number"
+                        android:textColor="#000000"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¿Cada cuántas horas?"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etFrecuencia"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Ej. 8 (para cada 8 horas)"
+                        android:inputType="number"
+                        android:textColor="#000000"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de inicio"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etFecha"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Ej. 21/04/2026"
+                        android:textColor="#000000"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hora de la primera alarma"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etHora"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:hint="Ej. 08:00 AM"
+                        android:textColor="#000000"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Breve explicación / Nota (Opcional)"
+                        android:textColor="@color/electric_technical_cyan"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <EditText
+                        android:id="@+id/etDescripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="#F0F0F0"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp"
+                        android:gravity="top|start"
+                        android:hint="Ej. Tomar con abundante agua después del almuerzo."
+                        android:inputType="textMultiLine"
+                        android:textColor="#000000"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnGuardarMedicina"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="GUARDAR MEDICINA"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#121212"
+                android:background="@drawable/bg_gradiente_moderno"
+                android:elevation="8dp"
+                android:layout_marginBottom="30dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
