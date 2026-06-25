@@ -8,8 +8,7 @@
 - [x] **Interfaz:** Diseño basado en Material Design con una interfaz intuitiva y profesional.
 
 ## Historial de Commits
-*(Aquí abajo, pega la captura de pantalla de tu lista de commits en GitHub)*
-![Captura de Commits](ruta-a-tu-imagen.png)
+![Captura de Commits]([ruta-a-tu-imagen.png](https://github.com/gdpina/pillminder-android/blob/master/Captura%20de%20pantalla%202026-06-24%20232621.png))
 
 ## Captura de Pantalla
 *(Aquí abajo, pega la captura de tu app funcionando)*
