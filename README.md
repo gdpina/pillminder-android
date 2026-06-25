@@ -10,6 +10,8 @@
 ## Historial de Commits
 ![Captura de Commits](https://github.com/gdpina/pillminder-android/blob/master/Captura%20de%20pantalla%202026-06-24%20232621.png?raw=true)
 
-## Captura de Pantalla
-*(Aquí abajo, pega la captura de tu app funcionando)*
-![Captura App](ruta-a-tu-imagen.png)
+## Captura de Pantalla 1
+![App Login](https://github.com/gdpina/pillminder-android/blob/master/Imagen1.jpg?raw=true)
+
+## Captura de Pantalla 2
+![App Registro](https://github.com/gdpina/pillminder-android/blob/master/Imagen2.jpg?raw=true)
