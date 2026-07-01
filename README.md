@@ -57,7 +57,7 @@ Para verificar el correcto funcionamiento de las 4 operaciones fundamentales del
 
 | Pantalla de Inicio (Read) | Formulario (Create/Update) | Notificación (WorkManager) |
 | :---: | :---: | :---: |
-| *[Agrega tu link de imagen aquí](https://github.com/gdpina/pillminder-android/blob/master/imagen4.jpg)* | *[Agrega tu link de imagen aquí](https://github.com/gdpina/pillminder-android/blob/master/Imagen5.jpg)* | *[Agrega tu link de imagen aquí](https://github.com/gdpina/pillminder-android/blob/master/Imagen3.jpg)* |
+| *[Agrega tu link de imagen aquí](https://github.com/gdpina/pillminder-android/blob/master/imagen4.jpg?raw=true)* | *[Agrega tu link de imagen aquí](https://github.com/gdpina/pillminder-android/blob/master/Imagen5.jpg?raw=true)* | *[Agrega tu link de imagen aquí](https://github.com/gdpina/pillminder-android/blob/master/Imagen3.jpg?raw=true)* |
 
 ---
 *Desarrollado como proyecto de aplicación nativa Android.*de imagen aquí)
