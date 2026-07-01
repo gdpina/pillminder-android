@@ -150,8 +150,11 @@ public class MainActivity extends AppCompatActivity {
                     cvEstadoVacio.setVisibility(View.GONE);
                     rvMedicinas.setVisibility(View.VISIBLE);
                     adaptador.setMedicinas(lista);
-                }
+                 }
             });
         }).start();
+
+
+
     }
 }
