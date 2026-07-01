@@ -85,6 +85,6 @@ public class RegistroActivity extends AppCompatActivity {
         view.setBackgroundResource(esExito ? R.drawable.bg_azul_redondeado : R.drawable.bg_rojo_redondeado);
         view.setBackgroundTintList(null);
         snackbar.show();
-// Comentario para commit 3
+
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Button btnAgregar;
-    Button btnCerrarSesion; // Declaración del nuevo botón
+    Button btnCerrarSesion;
     RecyclerView rvMedicinas;
     CardView cvEstadoVacio;
 
@@ -41,9 +41,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // --- DISPARAR WORKMANAGER PARA EL ENTREGABLE ---
+        androidx.work.OneTimeWorkRequest peticionNotificacion =
+                new androidx.work.OneTimeWorkRequest.Builder(RecordatorioWorker.class).build();
+
+        androidx.work.WorkManager.getInstance(this).enqueue(peticionNotificacion);
+
         // Vincular vistas
         btnAgregar = findViewById(R.id.btnAgregarMedicina);
-        btnCerrarSesion = findViewById(R.id.btnCerrarSesion); // Asegúrate de tener este ID en tu XML
+        btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         rvMedicinas = findViewById(R.id.rvMedicinas);
         cvEstadoVacio = findViewById(R.id.cvEstadoVacio);
 
