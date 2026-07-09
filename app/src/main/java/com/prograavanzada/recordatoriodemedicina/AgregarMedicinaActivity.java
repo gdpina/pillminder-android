@@ -153,6 +153,12 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
             int inventarioTotal = Integer.parseInt(inventarioStr);
             int frecuenciaHoras = Integer.parseInt(frecuenciaStr);
 
+            if (dosis <= 0) {
+                etCantidad.setError("La dosis a tomar debe ser mayor a 0");
+                mostrarAvisoFlotante("Error: La dosis debe ser mayor a 0", R.drawable.bg_rojo_redondeado, "#FFFFFF");
+                return;
+            }
+
             if (dosis > inventarioTotal) {
                 etCantidad.setError("La dosis no puede ser mayor");
                 mostrarAvisoFlotante("Error: La dosis supera a la caja", R.drawable.bg_rojo_redondeado, "#FFFFFF");
