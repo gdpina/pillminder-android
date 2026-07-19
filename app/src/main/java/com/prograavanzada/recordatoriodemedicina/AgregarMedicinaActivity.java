@@ -4,13 +4,22 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
@@ -22,7 +31,7 @@ import java.util.Locale;
 public class AgregarMedicinaActivity extends AppCompatActivity {
 
     EditText etNombre, etCantidad, etInventario, etFrecuencia, etFecha, etHora, etDescripcion;
-    android.widget.Button btnGuardar;
+    Button btnGuardar;
     ImageView btnVolver;
     AppDatabase baseDeDatos;
 
@@ -41,14 +50,15 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
         etHora = findViewById(R.id.etHora);
         etDescripcion = findViewById(R.id.etDescripcion);
         btnGuardar = findViewById(R.id.btnGuardarMedicina);
-
         btnVolver = findViewById(R.id.btnVolver);
+
         if (btnVolver != null) {
             btnVolver.setOnClickListener(v -> finish());
         }
 
-        baseDeDatos = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "base_medicinas_v3").fallbackToDestructiveMigration().build();
+        // --- LA CORRECCIÓN CLAVE ---
+        // Aquí usamos el Singleton, no creamos una nueva conexión
+        baseDeDatos = AppDatabase.getInstance(this);
 
         etFecha.setFocusable(false);
         etFecha.setClickable(true);
@@ -68,20 +78,15 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
             btnGuardar.setText("ACTUALIZAR MEDICINA");
         }
 
-        // --- ¡LA MAGIA DEL DICCIONARIO LOCAL AQUÍ! ---
-        // Esto detecta cuando el usuario termina de escribir el nombre y toca otro campo
-        // --- AVISO INTELIGENTE AL DETECTAR MEDICINA ---
         etNombre.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) { // Cuando el usuario termina de escribir y sale del campo
+            if (!hasFocus) {
                 String nombreIngresado = etNombre.getText().toString().trim();
                 String info = buscarInformacionMedica(nombreIngresado);
-
                 if (!info.isEmpty()) {
                     mostrarAvisoMedico(nombreIngresado, info);
                 }
             }
         });
-        // ----------------------------------------------
 
         etFecha.setOnClickListener(v -> {
             MaterialDatePicker<Long> selectorFecha = MaterialDatePicker.Builder.datePicker()
@@ -100,7 +105,6 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
         etHora.setOnClickListener(v -> {
             int horaDefecto = 8;
             int minutoDefecto = 0;
-
             String horaGuardada = etHora.getText().toString();
             if (!horaGuardada.isEmpty()) {
                 try {
@@ -108,12 +112,9 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
                     Date fechaHora = formatoHora.parse(horaGuardada);
                     Calendar calendarioHora = Calendar.getInstance();
                     calendarioHora.setTime(fechaHora);
-
                     horaDefecto = calendarioHora.get(Calendar.HOUR_OF_DAY);
                     minutoDefecto = calendarioHora.get(Calendar.MINUTE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                } catch (Exception e) { e.printStackTrace(); }
             }
 
             MaterialTimePicker selectorHora = new MaterialTimePicker.Builder()
@@ -128,7 +129,6 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
                 int minuto = selectorHora.getMinute();
                 String amPm = (hora >= 12) ? "PM" : "AM";
                 int hora12 = (hora > 12) ? hora - 12 : (hora == 0 ? 12 : hora);
-
                 String horaElegida = String.format(Locale.getDefault(), "%02d:%02d %s", hora12, minuto, amPm);
                 etHora.setText(horaElegida);
             });
@@ -145,107 +145,85 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
             String descripcion = etDescripcion.getText().toString().trim();
 
             if (nombre.isEmpty() || cantidadStr.isEmpty() || inventarioStr.isEmpty() || frecuenciaStr.isEmpty() || fecha.isEmpty() || hora.isEmpty()) {
-                mostrarAvisoFlotante("Por favor, completa todos los campos obligatorios", R.drawable.bg_rojo_redondeado, "#FFFFFF");
+                mostrarAvisoFlotante("Completa los campos obligatorios", R.drawable.bg_rojo_redondeado, "#FFFFFF");
                 return;
             }
 
-            int dosis = Integer.parseInt(cantidadStr);
             int inventarioTotal = Integer.parseInt(inventarioStr);
             int frecuenciaHoras = Integer.parseInt(frecuenciaStr);
 
-            if (dosis <= 0) {
-                etCantidad.setError("La dosis a tomar debe ser mayor a 0");
-                mostrarAvisoFlotante("Error: La dosis debe ser mayor a 0", R.drawable.bg_rojo_redondeado, "#FFFFFF");
-                return;
-            }
-
-            if (dosis > inventarioTotal) {
-                etCantidad.setError("La dosis no puede ser mayor");
-                mostrarAvisoFlotante("Error: La dosis supera a la caja", R.drawable.bg_rojo_redondeado, "#FFFFFF");
-                return;
-            }
-
-            try {
-                String fechaHoraString = fecha + " " + hora;
-                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
-                Date fechaAlarma = formato.parse(fechaHoraString);
-
-                Calendar calendarioAlarma = Calendar.getInstance();
-                calendarioAlarma.setTime(fechaAlarma);
-
-                Calendar ahora = Calendar.getInstance();
-                ahora.add(Calendar.MINUTE, -1);
-
-                if (calendarioAlarma.before(ahora)) {
-                    mostrarAvisoFlotante("Error: Esa fecha y hora ya pasaron", R.drawable.bg_rojo_redondeado, "#FFFFFF");
-                    return;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
             new Thread(() -> {
-                Medicina medicina = new Medicina(nombre, cantidadStr, inventarioTotal, fecha, hora, frecuenciaHoras, descripcion);
-                String mensajeExito;
+
+                Medicina medicina = new Medicina(
+                        nombre,
+                        cantidadStr,
+                        inventarioTotal,
+                        inventarioTotal,
+                        fecha,
+                        hora,
+                        frecuenciaHoras,
+                        descripcion
+                );
 
                 if (idMedicinaEditar != -1) {
+
                     medicina.id = idMedicinaEditar;
                     baseDeDatos.medicinaDao().actualizar(medicina);
-                    mensajeExito = "¡Actualizado exitosamente!";
+
                 } else {
+
                     baseDeDatos.medicinaDao().insertar(medicina);
-                    mensajeExito = "¡Guardado exitosamente!";
+
                 }
 
-                programarAlarma(nombre, cantidadStr, fecha, hora, frecuenciaHoras, descripcion);
+                programarAlarma(
+                        nombre,
+                        cantidadStr,
+                        fecha,
+                        hora,
+                        frecuenciaHoras,
+                        descripcion
+                );
 
                 runOnUiThread(() -> {
-                    mostrarAvisoFlotante(mensajeExito, R.drawable.bg_azul_redondeado, "#FFFFFF");
-                    new android.os.Handler().postDelayed(() -> finish(), 1000);
+
+                    mostrarAvisoFlotante(
+                            "¡Guardado exitosamente!",
+                            R.drawable.bg_azul_redondeado,
+                            "#FFFFFF"
+                    );
+
+                    new Handler().postDelayed(this::finish,1000);
+
                 });
+
             }).start();
         });
     }
 
-    // --- MINI DICCIONARIO MÉDICO (Puedes agregar más medicinas aquí) ---
     private String buscarInformacionMedica(String nombreMedicamento) {
         String busqueda = nombreMedicamento.toLowerCase().trim();
+        if (busqueda.contains("paracetamol") || busqueda.contains("acetaminofen")) return "Analgésico y antipirético. Sirve para aliviar dolor leve a moderado y reducir la fiebre. Tomar con agua.";
+        if (busqueda.contains("ibuprofeno")) return "Antiinflamatorio. Recomendable tomar con comida.";
+        if (busqueda.contains("amoxicilina")) return "Antibiótico. Es vital completar todo el tratamiento.";
+        return "";
+    }
 
-        if (busqueda.contains("paracetamol") || busqueda.contains("acetaminofen")) {
-            return "Analgésico y antipirético. Sirve para aliviar dolor leve a moderado y reducir la fiebre. Tomar con agua.";
-        } else if (busqueda.contains("ibuprofeno") || busqueda.contains("advil")) {
-            return "Antiinflamatorio. Usado para reducir fiebre, dolores musculares e inflamación. Recomendable tomar con comida.";
-        } else if (busqueda.contains("amoxicilina")) {
-            return "Antibiótico. Usado para tratar infecciones bacterianas. Es vital completar todo el tratamiento.";
-        } else if (busqueda.contains("loratadina") || busqueda.contains("cetirizina")) {
-            return "Antihistamínico. Alivia los síntomas de alergias como estornudos, picazón y ojos llorosos. No causa sueño.";
-        } else if (busqueda.contains("omeprazol")) {
-            return "Protector gástrico. Reduce la acidez estomacal. Tomar en ayunas 30 minutos antes del desayuno.";
-        } else if (busqueda.contains("aspirina")) {
-            return "Analgésico y antiinflamatorio. A veces usado para problemas cardiovasculares bajo receta médica.";
-        } else if (busqueda.contains("metformina")) {
-            return "Antidiabético. Ayuda a controlar los niveles de azúcar en la sangre en pacientes con diabetes tipo 2.";
-        } else {
-            return ""; // Si no la reconoce, lo deja vacío para que el usuario escriba lo que quiera
-        }
+    private void mostrarAvisoMedico(String nombre, String info) {
+        new AlertDialog.Builder(this)
+                .setTitle("Información de " + nombre)
+                .setMessage(info + "\n\n¿Deseas agregar esta información a la descripción?")
+                .setPositiveButton("Sí, agregar", (dialog, which) -> etDescripcion.setText(info))
+                .setNegativeButton("No, gracias", null)
+                .show();
     }
 
     private void programarAlarma(String nombre, String dosis, String fecha, String hora, int frecuenciaHoras, String descripcion) {
         try {
-            String fechaHoraString = fecha + " " + hora;
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
-            Date fechaAlarma = formato.parse(fechaHoraString);
-
-            Calendar calendario = Calendar.getInstance();
-            calendario.setTime(fechaAlarma);
-
-            Calendar ahora = Calendar.getInstance();
-            ahora.add(Calendar.MINUTE, -1);
-
-            if (calendario.before(ahora)) {
-                runOnUiThread(() -> android.widget.Toast.makeText(this, "⚠️ La hora ya pasó", android.widget.Toast.LENGTH_LONG).show());
-                return;
-            }
+            Date date = formato.parse(fecha + " " + hora);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
 
             Intent intent = new Intent(this, AlarmaReceiver.class);
             intent.putExtra("nombre", nombre);
@@ -253,56 +231,24 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
             intent.putExtra("frecuencia", frecuenciaHoras);
             intent.putExtra("descripcion", descripcion);
 
-            int codigoUnico = nombre.hashCode();
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    this, codigoUnico, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
-
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, nombre.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             if (alarmManager != null) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    if (!alarmManager.canScheduleExactAlarms()) {
-                        runOnUiThread(() -> android.widget.Toast.makeText(this, "❌ Dale permisos de Alarmas en Configuración.", android.widget.Toast.LENGTH_LONG).show());
-                        return;
-                    }
-                }
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendario.getTimeInMillis(), pendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            runOnUiThread(() -> android.widget.Toast.makeText(this, "Error: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show());
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     private void mostrarAvisoFlotante(String mensaje, int diseñoFondo, String colorTexto) {
-        com.google.android.material.snackbar.Snackbar snackbar = com.google.android.material.snackbar.Snackbar.make(findViewById(android.R.id.content), mensaje, com.google.android.material.snackbar.Snackbar.LENGTH_LONG);
-        snackbar.setTextColor(android.graphics.Color.parseColor(colorTexto));
-
-        android.view.View view = snackbar.getView();
-        android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) view.getLayoutParams();
-        params.gravity = android.view.Gravity.BOTTOM | android.view.Gravity.CENTER_HORIZONTAL;
-        params.width = android.widget.FrameLayout.LayoutParams.WRAP_CONTENT;
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), mensaje, Snackbar.LENGTH_LONG);
+        snackbar.setTextColor(Color.parseColor(colorTexto));
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         params.setMargins(0, 0, 0, 180);
         view.setLayoutParams(params);
-
         view.setBackgroundResource(diseñoFondo);
         view.setBackgroundTintList(null);
-
         snackbar.show();
-    }
-
-    private void mostrarAvisoMedico(String nombre, String info) {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Información de " + nombre)
-                .setMessage(info + "\n\n¿Deseas agregar esta información a la descripción?")
-                .setPositiveButton("Sí, agregar", (dialog, which) -> {
-                    etDescripcion.setText(info);
-                })
-                .setNegativeButton("No, gracias", null)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
     }
 }
