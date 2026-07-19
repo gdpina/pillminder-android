@@ -134,7 +134,7 @@ public class AgregarMedicinaActivity extends AppCompatActivity {
             });
             selectorHora.show(getSupportFragmentManager(), "HORA_MODERNA");
         });
-
+// Validación extra para prevenir crashes por campos nulos (Bug 2)
         btnGuardar.setOnClickListener(v -> {
             String nombre = etNombre.getText().toString().trim();
             String cantidadStr = etCantidad.getText().toString().trim();
